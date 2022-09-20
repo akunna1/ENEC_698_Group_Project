@@ -30,8 +30,9 @@ view(eui_data_n2) #gives 117 entries
 
 #Plotting
 ggplot()+
-  geom_point(data = eui_data_n2, mapping = aes(x=Year_occupied, y=Latest_reno))
-  # make correlation line later
+  geom_point(data = eui_data_n2, se=FALSE, color='black', mapping = aes(x=Year_occupied, y=Latest_reno))+
+  geom_smooth(method = 'lm', data = eui_data_n2, mapping = aes(x=Year_occupied, y=Latest_reno))+
+  labs(x='Year Occupied', y='Year of Latest Renovation', title='Latest Renovation Year Vs. Occupancy Year')
 
 
 #make box plot for steam, EUI and Chilled water. Do group_by property type
