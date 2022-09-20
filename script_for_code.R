@@ -35,4 +35,18 @@ ggplot()+
   labs(x='Year Occupied', y='Year of Latest Renovation', title='Latest Renovation Year Vs. Occupancy Year')
 
 
-#make box plot for steam, EUI and Chilled water. Do group_by property type
+#Make box plot for steam, EUI and Chilled water. Do group_by property type
+
+#Box Plot for steam
+#removing NAs in Steam_in_klb column
+eui_data_steam <- filter(eui_data_joined, !is.na(eui_data_joined$Steam_in_klb))
+view(eui_data_steam) #gives 147 entries
+
+#Grouping joined data (unfiltered) by property type
+property_type_count <- eui_data_joined%>%
+  group_by(Property_type) %>%
+  summarise(Total = n()) # grouping the steam data into property type by count
+view(property_type_count)
+
+#Making tables for each property type- doing steam
+# filter each data by property types- then from each table find the outliers.
