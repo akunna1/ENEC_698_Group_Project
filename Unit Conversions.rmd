@@ -1,0 +1,55 @@
+---
+title: "Data Cleaning"
+output: html_notebook
+---
+```{r}
+# Load libraries
+library(tidyverse)  # dealing with tabular data
+library(lubridate) # handling dates
+library(dplyr) # data manipulation
+library(tidyr) # tidy data
+library(data.table) # table formated result
+library(ggplot2) # visualization
+library(scales)# graphical scaling
+library(readxl) # Allows us to read Excel files
+```
+
+```{r}
+# Importing my .csv data files to the Global Environment
+eui_data_2019 = read_csv('eui2019.csv')
+br_data_2019 = read_csv('Buildings and Renos 2021.csv')
+
+eui_data_2019 = eui_data_2019 %>% rename('Building Code' = 'BUILDINGNUMBER')
+head(eui_data_2019)
+head(br_data_2019)
+```
+
+```{r}
+colnames(eui_data_2019)
+colnames(br_data_2019)
+```
+
+
+```{r}
+eui_data_joined = left_join(eui_data_2019, br_data_2019, by = "Building Code")
+
+view(eui_data_joined)
+```
+
+```{r}
+eui_data_conv <- eui_data_joined
+eui_data_conv$'eUI' = (.0034)*eui_data_joined$'Chilled Water [ton-hr]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'CWUI' = (.012)*eui_data_joined$'Chilled Water [ton-hr]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'SUI' = (1.2)*eui_data_joined$'Steam [klb]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'NGUI' = (.1)*eui_data_joined$'Natural Gas [therms]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'calcEUI' = eui_data_conv$'eUI' + eui_data_conv$'CWUI' + eui_data_conv$'SUI' + eui_data_conv$'NGUI'
+eui_data_conv$'Error' = (eui_data_conv$'calcEUI'- eui_data_conv$'EUI [mmbtu/sqft]')/eui_data_conv$'EUI [mmbtu/sqft]'
+```
+
+```{r}
+
+```
+
+
+
+
