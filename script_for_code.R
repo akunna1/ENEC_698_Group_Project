@@ -67,3 +67,9 @@ ggplot()+
   geom_point(data = eui_data_n2, se=FALSE, color='black', mapping = aes(x=Year_occupied, y=Latest_reno))+
   labs(x='Year Occupied', y='Year of Latest Renovation', title='Latest Renovation Year Vs. Occupancy Year')
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+#Check why certain buildings are outliers
+#For Steam
+#For Chilled Water
+#For EUI
+#Histogram?
