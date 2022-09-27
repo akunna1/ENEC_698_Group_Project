@@ -1,0 +1,92 @@
+---
+title: "Data Cleaning"
+output: html_notebook
+---
+```{r}
+# Load libraries
+library(tidyverse)  # dealing with tabular data
+library(lubridate) # handling dates
+library(dplyr) # data manipulation
+library(tidyr) # tidy data
+library(data.table) # table formated result
+library(ggplot2) # visualization
+library(scales)# graphical scaling
+library(readxl) # Allows us to read Excel files
+library(rstatix) # Finding outlier by group
+```
+
+```{r}
+# Importing my .csv data files to the Global Environment
+eui_data_2019 = read_csv('eui2019.csv')
+br_data_2019 = read_csv('Buildings and Renos 2021.csv')
+
+eui_data_2019 = eui_data_2019 %>% rename('Building Code' = 'BUILDINGNUMBER')
+head(eui_data_2019)
+head(br_data_2019)
+```
+
+```{r}
+colnames(eui_data_2019)
+colnames(br_data_2019)
+```
+
+
+```{r}
+eui_data_joined = left_join(eui_data_2019, br_data_2019, by = "Building Code")
+
+view(eui_data_joined)
+```
+
+```{r}
+eui_data_conv <- eui_data_joined
+eui_data_conv$'eUI' = (.0034)*eui_data_joined$'Chilled Water [ton-hr]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'CWUI' = (.012)*eui_data_joined$'Chilled Water [ton-hr]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'SUI' = (1.2)*eui_data_joined$'Steam [klb]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'NGUI' = (.1)*eui_data_joined$'Natural Gas [therms]'/eui_data_joined$'SQUAREFEET'
+eui_data_conv$'calcEUI' = eui_data_conv$'eUI' + eui_data_conv$'CWUI' + eui_data_conv$'SUI' + eui_data_conv$'NGUI'
+eui_data_conv$'Error' = (eui_data_conv$'calcEUI'- eui_data_conv$'EUI [mmbtu/sqft]')/eui_data_conv$'EUI [mmbtu/sqft]'
+```
+
+```{r}
+ggplot(eui_data_conv) +
+  geom_histogram(aes(x=calcEUI, fill="Land Entity Class"),binwidth=0.01)
+```
+```{r}
+unique(eui_data_conv$PROPERTY_TYPE) 
+```
+
+```{r}
+eui_barplot <- eui_data_conv %>%
+  mutate_all(funs(ifelse(is.na(.), 0, .)))
+
+eui_barplot
+```
+
+```{r}
+sum(!complete.cases(eui_data_conv))
+```
+
+
+
+```{r}
+sui_desc <- eui_data_conv %>% arrange(desc(SUI))
+sui_admin <- sui_desc %>% filter(PROPERTY_TYPE == "ADMINISTRATIVE")
+sui_lab <- sui_desc %>% filter(PROPERTY_TYPE == "LAB/CLASS")
+sui_class <- sui_desc %>% filter(PROPERTY_TYPE == "LAB/CLASS")
+
+
+view(admin_max_s)
+view(lab_max_s)
+```
+
+```{r}
+sui_outliers <- eui_data_conv %>% group_by("PROPERTY_TYPE") %>% identify_outliers("SUI") %>% sort("SUI", decreasing = TRUE)
+cwui_outliers <- eui_data_conv %>% group_by("PROPERTY_TYPE") %>% identify_outliers("CWUI") %>% sort("CWUI", decreasing = TRUE)
+
+view(sui_outliers)
+view(cwui_outliers)
+```
+
+
+
+
