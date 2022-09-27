@@ -15,7 +15,6 @@ eui_data_2019 = read_csv("eui2019_ake.csv")
 br_data_2019 = read_csv("buildings_and_renos_2021_ake.csv")
 
 eui_data_joined = left_join(eui_data_2019, br_data_2019, by="Building_number")
-
 view(eui_data_joined) # contains 252 entries
 
 #removing NAs in Steam_in_klb, Chilled_water_ton_hr and EUI_in_mmbtu_per_sqft columns
@@ -73,3 +72,4 @@ ggplot()+
 #For Chilled Water
 #For EUI
 #Histogram?
+
