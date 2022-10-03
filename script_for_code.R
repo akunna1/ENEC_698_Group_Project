@@ -36,6 +36,7 @@ property_type_count_sce <- eui_data_sce%>%
   summarise(Total = n()) # grouping the steam data into property type by count
 view(property_type_count_sce)
 
+#_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 #Boxplots
 #boxplot1: Steam
 qplot(x=eui_data_sce$Property_type, y=eui_data_sce$Steam_in_klb, geom="boxplot", main="Boxplot of Steam (klb) by Property type", ylab="Steam(klb)", xlab="Property Type", col=I('black'), fill=eui_data_sce$Property_type) + 
@@ -67,9 +68,42 @@ ggplot()+
   labs(x='Year Occupied', y='Year of Latest Renovation', title='Latest Renovation Year Vs. Occupancy Year')
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-#Check why certain buildings are outliers
-#For Steam
-#For Chilled Water
-#For EUI
-#Histogram?
+#Summaries of steam, chilled water, EUI
+summary(eui_data_sce$Steam_in_klb) #steam
+summary(eui_data_sce$Chilled_water_ton_hr) #Chilled water
+summary(eui_data_sce$EUI_in_mmbtu_per_sqft) #EUI
 
+#Creating Histograms for steam, chilled water, EUI
+hist(eui_data_sce$Steam_in_klb, main="Histogram of Steam", xlab="Steam(klb)", col="pink")
+hist(eui_data_sce$Chilled_water_ton_hr, main="Histogram of Chilled Water", xlab="Chilled Water (ton*hr)", col="brown")
+hist(eui_data_sce$EUI_in_mmbtu_per_sqft, main="Histogram of EUI", xlab="EUI (mmBtu/sqft)", col="purple")
+
+#Plotting Densities for steam, chilled water, EUI
+plot(density(eui_data_sce$Steam_in_klb), main="Steam Density")
+plot(density(eui_data_sce$Chilled_water_ton_hr), main="Chilled Water Density")
+plot(density(eui_data_sce$EUI_in_mmbtu_per_sqft), main="EUI Density")
+
+#Extracting the Outliers for steam, Chilled water and EUI by property type
+#Steam: extracting outliers
+#Outliers are present in the property types of residence halls,classroom, atheltic, administrative
+eui_data_sce%>%
+  filter(Property_type=="RESIDENCE HALLS")%>%
+  View() #check out the steam max in the table (1 max)
+
+eui_data_sce%>%
+  filter(Property_type=="CLASSROOMS")%>%
+  View() #check out the steam max in the table (2 maxes)
+
+eui_data_sce%>%
+  filter(Property_type=="ATHLETIC")%>%
+  View() #check out the steam max in the table (1 max)
+
+eui_data_sce%>%
+  filter(Property_type=="ADMINISTRATIVE")%>%
+  View() #check out the steam max in the table (1 max)
+
+
+#Chilled Water: extracting outliers
+
+#have to stop hear due to confusion...
+# I have to new steam and chilled water columns but how?
