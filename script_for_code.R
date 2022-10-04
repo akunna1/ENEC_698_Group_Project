@@ -17,50 +17,78 @@ br_data_2019 = read_csv("buildings_and_renos_2021_ake.csv")
 eui_data_joined = left_join(eui_data_2019, br_data_2019, by="Building_number")
 view(eui_data_joined) # contains 252 entries
 
-#removing NAs in Steam_in_klb, Chilled_water_ton_hr and EUI_in_mmbtu_per_sqft columns
-eui_data_steam <- filter(eui_data_joined, !is.na(eui_data_joined$Steam_in_klb))
-eui_data_sc <- filter(eui_data_steam, !is.na(eui_data_steam$Chilled_water_ton_hr))
-eui_data_sce <- filter(eui_data_sc, !is.na(eui_data_sc$EUI_in_mmbtu_per_sqft))
-view(eui_data_sce) #gives 126 entries
+#_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+#Adding two new columns to joined dataframe: steam/area and chilled/area
+eui_data_joined_1 <- eui_data_joined # Replicating data
+eui_data_joined_1$Steam_area <- eui_data_joined_1$Steam_in_klb / eui_data_joined_1$Square_feet # Creating new column and adding it to dataframe
+view(eui_data_joined_1) # Printing new data- contains steam/area
 
-#Grouping joined data (unfiltered) by property type and doing a count
-property_type_count <- eui_data_joined%>%
+eui_data_joined_2 <- eui_data_joined_1 # Replicating data
+eui_data_joined_2$Chilled_area <- eui_data_joined_2$Chilled_water_ton_hr / eui_data_joined_2$Square_feet # Creating new column and adding it to dataframe
+view(eui_data_joined_2) # Printing new data- contains Steam/area and Chilled/area
+
+#_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+#Filtering to remove NAs
+#removing NAs in Steam_in_klb, Chilled_water_ton_hr and EUI_in_mmbtu_per_sqft columns
+eui_data_sa <- filter(eui_data_joined_2, !is.na(eui_data_joined_2$Steam_area)) #Removes NAs for Steam_area
+eui_data_ca <- filter(eui_data_joined_2, !is.na(eui_data_joined_2$Chilled_area))#Removes NAs for Chilled_area
+eui_data_ea <-filter(eui_data_joined_2, !is.na(eui_data_joined_2$EUI_in_mmbtu_per_sqft))#Removes NAs for EUI
+
+view(eui_data_sa) #gives 147 entries
+view(eui_data_ca)#gives 147 entries
+view(eui_data_ea) #gives 252 entries
+
+#_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+#Grouping and Counting
+#Grouping the joined data with new columns by property type and doing a count
+property_type_count <- eui_data_joined_2%>%
   group_by(Property_type) %>%
   summarise(Total = n()) # grouping the joined data into property type by count
 view(property_type_count)
 
-#Grouping sce data  by property type and doing a count
-#sce- steam,chilled water and eui
-property_type_count_sce <- eui_data_sce%>%
+#Grouping Steam_area data by property type and doing a count
+property_type_count_steam <- eui_data_sa%>%
   group_by(Property_type) %>%
-  summarise(Total = n()) # grouping the steam data into property type by count
-view(property_type_count_sce)
+  summarise(Total = n()) # grouping the steam_area data into property type by count
+view(property_type_count_steam)
+
+#Grouping chilled_area data by property type and doing a count
+property_type_count_chilled <- eui_data_ca%>%
+  group_by(Property_type) %>%
+  summarise(Total = n()) # grouping the chilled_area data into property type by count
+view(property_type_count_chilled)
+
+#Grouping eui data by property type and doing a count
+property_type_count_eui <- eui_data_ea%>%
+  group_by(Property_type) %>%
+  summarise(Total = n()) # grouping the eui data into property type by count
+view(property_type_count_eui)
 
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 #Boxplots
-#boxplot1: Steam
-qplot(x=eui_data_sce$Property_type, y=eui_data_sce$Steam_in_klb, geom="boxplot", main="Boxplot of Steam (klb) by Property type", ylab="Steam(klb)", xlab="Property Type", col=I('black'), fill=eui_data_sce$Property_type) + 
+#boxplot1: Steam_area
+qplot(x=eui_data_sa$Property_type, y=eui_data_sa$Steam_area, geom="boxplot", main="Boxplot of Steam per Area (klb/Sqft) by Property type", ylab="Steam per Area(klb/Sqft)", xlab="Property Type", col=I('black'), fill=eui_data_sa$Property_type) + 
   coord_flip()+
   theme(legend.position="none") #to remove legend
   
-#boxplot2: Chilled Water
-qplot(x=eui_data_sce$Property_type, y=eui_data_sce$Chilled_water_ton_hr, geom="boxplot", main="Boxplot of Chilled Water (ton-hr) by Property type", ylab="Chilled Water (ton-hr)", xlab="Property Type", col=I('black'), fill=eui_data_sce$Property_type) + 
+#boxplot2: Chilled_area
+qplot(x=eui_data_ca$Property_type, y=eui_data_ca$Chilled_area, geom="boxplot", main="Boxplot of Chilled Water per Area (ton-hr/Sqft) by Property type", ylab="Chilled Water per Area (ton-hr/Sqft)", xlab="Property Type", col=I('black'), fill=eui_data_ca$Property_type) + 
   coord_flip()+
   theme(legend.position="none") #to remove legend
 
 #boxplot3: EUI
-qplot(x=eui_data_sce$Property_type, y=eui_data_sce$EUI_in_mmbtu_per_sqft, geom="boxplot", main="Boxplot of EUI (MMBTU/Sqft) by Property type", ylab="EUI (MMBTU/Sqft)", xlab="Property Type", col=I('black'), fill=eui_data_sce$Property_type) + 
+qplot(x=eui_data_ea$Property_type, y=eui_data_ea$EUI_in_mmbtu_per_sqft, geom="boxplot", main="Boxplot of EUI (MMBTU/Sqft) by Property type", ylab="EUI (MMBTU/Sqft)", xlab="Property Type", col=I('black'), fill=eui_data_ea$Property_type) + 
   coord_flip()+
   theme(legend.position="none") #to remove legend
 
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 #Line Graph for Year Occupied Vs. Year of Latest Renovation
 #Filtering to remove rows with NAs for columns Year_occupied and Latest_reno
-eui_data_n1 <- filter(eui_data_sce, !is.na(eui_data_sce$Year_occupied))
-view(eui_data_n1) #gives 123 entries
+eui_data_n1 <- filter(eui_data_joined_2, !is.na(eui_data_joined_2$Year_occupied))
+view(eui_data_n1) #gives 236 entries
 
 eui_data_n2 <- filter(eui_data_n1, !is.na(eui_data_n1$Latest_reno))
-view(eui_data_n2) #gives 74 entries
+view(eui_data_n2) #gives 117 entries
 
 #Plotting
 ggplot()+
@@ -68,43 +96,44 @@ ggplot()+
   labs(x='Year Occupied', y='Year of Latest Renovation', title='Latest Renovation Year Vs. Occupancy Year')
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-#Summaries of steam, chilled water, EUI
-summary(eui_data_sce$Steam_in_klb) #steam
-summary(eui_data_sce$Chilled_water_ton_hr) #Chilled water
-summary(eui_data_sce$EUI_in_mmbtu_per_sqft) #EUI
+#Summaries of steam_area, chilled_area, EUI
+summary(eui_data_sa$Steam_area) #Steam_area (steam/area)
+summary(eui_data_ca$Chilled_area) #Chilled_area (chilled water/area)
+summary(eui_data_ea$EUI_in_mmbtu_per_sqft) #EUI
 
-#Creating Histograms for steam, chilled water, EUI
-hist(eui_data_sce$Steam_in_klb, main="Histogram of Steam", xlab="Steam(klb)", col="pink")
-hist(eui_data_sce$Chilled_water_ton_hr, main="Histogram of Chilled Water", xlab="Chilled Water (ton*hr)", col="brown")
-hist(eui_data_sce$EUI_in_mmbtu_per_sqft, main="Histogram of EUI", xlab="EUI (mmBtu/sqft)", col="purple")
+#Creating Histograms for steam_area, chilled_area, EUI
+hist(eui_data_sa$Steam_area, main="Histogram of Steam per Area", xlab="Steam per Area (klb/Sqft)", col="pink")
+hist(eui_data_ca$Chilled_area, main="Histogram of Chilled Water per Area", xlab="Chilled Water per Area (ton*hr/Sqft)", col="brown")
+hist(eui_data_ea$EUI_in_mmbtu_per_sqft, main="Histogram of EUI", xlab="EUI (MMBtu/sqft)", col="purple")
 
-#Plotting Densities for steam, chilled water, EUI
-plot(density(eui_data_sce$Steam_in_klb), main="Steam Density")
-plot(density(eui_data_sce$Chilled_water_ton_hr), main="Chilled Water Density")
-plot(density(eui_data_sce$EUI_in_mmbtu_per_sqft), main="EUI Density")
+#Plotting Densities for steam_area, chilled_area, EUI
+plot(density(eui_data_sa$Steam_area), main="Steam per Area Density")
+plot(density(eui_data_ca$Chilled_area), main="Chilled Water per Area Density")
+plot(density(eui_data_ea$EUI_in_mmbtu_per_sqft), main="EUI Density")
 
-#Extracting the Outliers for steam, Chilled water and EUI by property type
-#Steam: extracting outliers
-#Outliers are present in the property types of residence halls,classroom, atheltic, administrative
-eui_data_sce%>%
-  filter(Property_type=="RESIDENCE HALLS")%>%
-  View() #check out the steam max in the table (1 max)
+#Extracting the Outliers for steam_area, chilled_area, EUI by property type
+#Steam_area: extracting outliers
+#Outliers are present in the property types of research laboratory (1),lab/class (1), classrooms(1), atheltic (1), administrative (3)
+eui_data_sa%>%
+  filter(Property_type=="RESEARCH LABORATORY")%>%
+  View() #check out the steam_area max in the table (1 max)
 
-eui_data_sce%>%
+eui_data_sa%>%
+  filter(Property_type=="LAB/CLASS")%>%
+  View() #check out the steam_area max in the table (1 max)
+
+eui_data_sa%>%
   filter(Property_type=="CLASSROOMS")%>%
-  View() #check out the steam max in the table (2 maxes)
+  View() #check out the steam_area max in the table (1 max)
 
-eui_data_sce%>%
+eui_data_sa%>%
   filter(Property_type=="ATHLETIC")%>%
-  View() #check out the steam max in the table (1 max)
+  View() #check out the steam_area max in the table (1 max)
 
-eui_data_sce%>%
+eui_data_sa%>%
   filter(Property_type=="ADMINISTRATIVE")%>%
-  View() #check out the steam max in the table (1 max)
+  View() #check out the steam_area max in the table (3 maxes)
 
 #Chilled Water: extracting outliers...
 #EUI: extracting outliers...
 
-#had to stop hear due to confusion...
-# I have to new steam and chilled water columns but how?
-# read Github commit message
