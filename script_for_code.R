@@ -81,6 +81,7 @@ qplot(x=eui_data_ea$Property_type, y=eui_data_ea$EUI_in_mmbtu_per_sqft, geom="bo
   coord_flip()+
   theme(legend.position="none") #to remove legend
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+#For Diana:
 #Filtering data to remove all the NA values of Steam_area, chilled_area, eui
 #NAs for steam have already been removed (eui_data_sa)
 eui_data_sca_x <- filter(eui_data_sa, !is.na(eui_data_sa$Chilled_area)) #removes NAs for chilled water
