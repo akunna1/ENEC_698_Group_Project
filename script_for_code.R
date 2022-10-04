@@ -120,6 +120,7 @@ plot(density(eui_data_sa$Steam_area), main="Steam per Area Density")
 plot(density(eui_data_ca$Chilled_area), main="Chilled Water per Area Density")
 plot(density(eui_data_ea$EUI_in_mmbtu_per_sqft), main="EUI Density")
 
+#_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 #Extracting the Outliers for steam_area, chilled_area, EUI by property type
 #Steam_area: extracting outliers
 #Outliers are present in the property types of research laboratory (1),lab/class (1), classrooms(1), atheltic (1), administrative (3)
@@ -142,8 +143,8 @@ eui_data_sa%>%
 eui_data_sa%>%
   filter(Property_type=="ADMINISTRATIVE")%>%
   View() #check out the steam_area max in the table (3 maxes)
-
-#Chilled Water: extracting outliers...
+#____________________________________
+#Chilled Water: extracting outliers
 eui_data_ca%>%
   filter(Property_type=="RESEARCH LABORATORY")%>%
   View() #check out the chilled_area max in the table (1 max)
@@ -167,5 +168,34 @@ eui_data_ca%>%
 eui_data_ca%>%
   filter(Property_type=="ATHLETIC")%>%
   View() #check out the chilled_area min in the table (1 min)
-#EUI: extracting outliers...
 
+eui_data_ca%>%
+  filter(Property_type=="ADMINISTRATIVE")%>%
+  View() #check out the chilled_area maxes in the table (5 maxes)
+
+#____________________________________
+#EUI: extracting outliers
+eui_data_ea%>%
+  filter(Property_type=="SHOP SPACE")%>%
+  View() #check out the chilled_area max in the table (1 max)
+
+eui_data_ea%>%
+  filter(Property_type=="RESIDENTIAL")%>%
+  View() #check out the chilled_area max in the table (1 max)
+
+
+eui_data_ea%>%
+  filter(Property_type=="RESEARCH LABORATORY")%>%
+  View() #check out the chilled_area max in the table (1 max)
+
+eui_data_ea%>%
+  filter(Property_type=="LAB/CLASS")%>%
+  View() #check out the chilled_area min and max in the table (1 max and 1 min)
+
+eui_data_ea%>%
+  filter(Property_type=="HOTEL/DINING")%>%
+  View() #check out the chilled_area max in the table (1 max)
+
+eui_data_ea%>%
+  filter(Property_type=="ADMINISTRATIVE")%>%
+  View() #check out the chilled_area maxes in the table (5 maxes)
