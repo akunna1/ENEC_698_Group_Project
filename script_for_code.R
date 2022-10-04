@@ -144,6 +144,28 @@ eui_data_sa%>%
   View() #check out the steam_area max in the table (3 maxes)
 
 #Chilled Water: extracting outliers...
+eui_data_ca%>%
+  filter(Property_type=="RESEARCH LABORATORY")%>%
+  View() #check out the chilled_area max in the table (1 max)
 
+eui_data_ca%>%
+  filter(Property_type=="PHYSICAL ED")%>%
+  View() #check out the chilled_area max and min in the table (1 max)
+
+eui_data_ca%>%
+  filter(Property_type=="CONFERENCE CTR")%>%
+  View() #check out the chilled_area min in the table (1 min)
+
+eui_data_ca%>%
+  filter(Property_type=="CLINICAL")%>%
+  View() #check out the chilled_area min in the table (1 min)
+
+eui_data_ca%>%
+  filter(Property_type=="CLASSROOMS")%>%
+  View() #check out the chilled_area max in the table (1 max)
+
+eui_data_ca%>%
+  filter(Property_type=="ATHLETIC")%>%
+  View() #check out the chilled_area min in the table (1 min)
 #EUI: extracting outliers...
 
