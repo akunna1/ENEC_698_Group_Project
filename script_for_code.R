@@ -80,7 +80,15 @@ qplot(x=eui_data_ca$Property_type, y=eui_data_ca$Chilled_area, geom="boxplot", m
 qplot(x=eui_data_ea$Property_type, y=eui_data_ea$EUI_in_mmbtu_per_sqft, geom="boxplot", main="Boxplot of EUI (MMBTU/Sqft) by Property type", ylab="EUI (MMBTU/Sqft)", xlab="Property Type", col=I('black'), fill=eui_data_ea$Property_type) + 
   coord_flip()+
   theme(legend.position="none") #to remove legend
+#_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+#Filtering data to remove all the NA values of Steam_area, chilled_area, eui
+#NAs for steam have already been removed (eui_data_sa)
+eui_data_sca_x <- filter(eui_data_sa, !is.na(eui_data_sa$Chilled_area)) #removes NAs for chilled water
+view(eui_data_sca_x) #gives 126 entries
+eui_data_scea_x <- filter(eui_data_sca_x, !is.na(eui_data_sca_x$EUI_in_mmbtu_per_sqft))
+view(eui_data_scea_x) #gives 126 entries
 
+write.csv(eui_data_scea_x,file='/Users/akunna1/Desktop/edited_file.csv')
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 #Line Graph for Year Occupied Vs. Year of Latest Renovation
 #Filtering to remove rows with NAs for columns Year_occupied and Latest_reno
@@ -135,5 +143,6 @@ eui_data_sa%>%
   View() #check out the steam_area max in the table (3 maxes)
 
 #Chilled Water: extracting outliers...
+
 #EUI: extracting outliers...
 
