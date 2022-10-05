@@ -27,6 +27,8 @@ eui_data_joined_2 <- eui_data_joined_1 # Replicating data
 eui_data_joined_2$Chilled_area <- eui_data_joined_2$Chilled_water_ton_hr / eui_data_joined_2$Square_feet # Creating new column and adding it to dataframe
 view(eui_data_joined_2) # Printing new data- contains Steam/area and Chilled/area
 
+write.csv(eui_data_joined_2,file='/Users/akunna1/Desktop/joined_file_edited.csv')
+
 #_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 #Filtering to remove NAs
 #removing NAs in Steam_in_klb, Chilled_water_ton_hr and EUI_in_mmbtu_per_sqft columns
