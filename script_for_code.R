@@ -144,7 +144,7 @@ eui_data_sa%>%
 
 eui_data_sa%>%
   filter(Property_type=="ADMINISTRATIVE")%>%
-  View() #check out the steam_area max in the table (3 maxes)
+  View() #check out the steam_area max in the table (2 maxes)
 #____________________________________
 #Chilled Water: extracting outliers
 eui_data_ca%>%
@@ -153,7 +153,11 @@ eui_data_ca%>%
 
 eui_data_ca%>%
   filter(Property_type=="PHYSICAL ED")%>%
-  View() #check out the chilled_area max and min in the table (1 max)
+  View() #check out the chilled_area max in the table (1 max)
+
+eui_data_ca%>%
+  filter(Property_type=="LAB/CLASS")%>%
+  View() #check out the chilled_area max and min in the table (1 max, 1 min)
 
 eui_data_ca%>%
   filter(Property_type=="CONFERENCE CTR")%>%
@@ -179,25 +183,27 @@ eui_data_ca%>%
 #EUI: extracting outliers
 eui_data_ea%>%
   filter(Property_type=="SHOP SPACE")%>%
-  View() #check out the chilled_area max in the table (1 max)
+  View() #check out the EUI max in the table (1 max)
 
 eui_data_ea%>%
   filter(Property_type=="RESIDENTIAL")%>%
-  View() #check out the chilled_area max in the table (1 max)
-
+  View() #check out the EUI max in the table (1 max)
 
 eui_data_ea%>%
   filter(Property_type=="RESEARCH LABORATORY")%>%
-  View() #check out the chilled_area max in the table (1 max)
+  View() #check out the EUI max in the table (1 max)
 
 eui_data_ea%>%
   filter(Property_type=="LAB/CLASS")%>%
-  View() #check out the chilled_area min and max in the table (1 max and 1 min)
+  View() #check out the EUI min and max in the table (1 max and 1 min)
 
 eui_data_ea%>%
   filter(Property_type=="HOTEL/DINING")%>%
-  View() #check out the chilled_area max in the table (1 max)
+  View() #check out the EUI max in the table (1 max)
 
 eui_data_ea%>%
   filter(Property_type=="ADMINISTRATIVE")%>%
-  View() #check out the chilled_area maxes in the table (5 maxes)
+  View() #check out the EUI maxes in the table (5 maxes)
+
+# Create Plots
+# Look at relationship between EUI and Steam, EUI and CW, CW and Steam
