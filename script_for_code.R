@@ -204,3 +204,9 @@ eui_data_ea%>%
 eui_data_ea%>%
   filter(Property_type=="ADMINISTRATIVE")%>%
   View() #check out the EUI maxes in the table (5 maxes)
+<<<<<<< HEAD
+=======
+
+# Create Plots
+# Look at relationship between EUI and Steam, EUI and CW, CW and Steam
+>>>>>>> 89be9a5e38b81c784aeaa5aff8c706dd3cbc95ba
